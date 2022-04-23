@@ -1,0 +1,7 @@
+.visibility_navbar{
+    visibility: visible !important
+}
+
+.visibility_navbar_none{
+    visibility: hidden !important
+}
