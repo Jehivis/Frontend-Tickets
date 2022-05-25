@@ -2,6 +2,7 @@ import axios from 'axios'
 import moment from 'moment-timezone';
 import momentAdd from 'moment';
 const url = process.env.REACT_APP_URL_BASE;
+const urlContadores = process.env.REACT_APP_URL_BASE_CONTADORES;
 
 /*Muestra los datos de venta buscados por _id*/
 export const salesShowById = (store) => {
@@ -234,6 +235,22 @@ export const deleteDataSales = async (id) => {
         })
 }
 
+//Contadores de personas
+export const getConterStore = (dateFind,store) => {
+    
+    let storeEnd = store?store: localStorage.getItem('store');
+    console.log(urlContadores + `/dataCounterStore/${dateFind}/${storeEnd}`);
+    return axios
+        .get(urlContadores + `/dataCounterStore/${dateFind}/${storeEnd}`)
+        .then((response) => {
+            console.log(response.data)
+            return response.data;
+        })
+        .catch((error) => {
+            console.log(error);
+        })
+
+}
 
 /*
 Bitacora de Ejecucion

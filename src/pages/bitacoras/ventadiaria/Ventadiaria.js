@@ -28,7 +28,12 @@ import Select from 'react-select';
 import Swal from 'sweetalert2'
 import Loading from './img/loading.gif'
 //Funciones
-import { confirmdataVendors, confirmdataInvoice, confirmdataMethodPayment, createDataSales, validDataSales } from '../../../functions/salesFunctions'
+import { confirmdataVendors, 
+         confirmdataInvoice, 
+         confirmdataMethodPayment, 
+         createDataSales, 
+         validDataSales,
+         getConterStore } from '../../../functions/salesFunctions'
 import { getStore } from '../../../functions/ticketFunction'
 
 
@@ -113,6 +118,7 @@ const TransferSystemPage = () => {
     }]);
     const [startDate, setStartDate] = useState(moment().tz("America/Guatemala").format("yyyy-MM-DD"));
     const [store, setStore] = useState(null);
+    const [counter, setCounter] = useState(0);
     //ApiRest datos de colaboradores
     const datos = [];
 
@@ -121,7 +127,28 @@ const TransferSystemPage = () => {
     const datosTiendas = [];
     getStore().then((res) => { res.map(resdata => datosTiendas.push({ name: resdata.name, label: resdata.name })) });
 
-    useEffect(() => {}, []);
+    getConterStore(startDate,store).then(res =>{ setCounter(res.length > 0 ?res[0]?.entrada:0)}).catch(err =>{ console.log("Error al solicitar el dato", err) });
+    
+    /* const getCounterDataUnion = (startDate) =>{
+        getConterStore(startDate, store).then(res =>{
+            return res;
+        }).catch(err =>{
+            console.log("Error al solicitar el dato", err);
+        });
+    } */
+
+    useEffect(() => {
+        /* let dataCounter = getCounterDataUnion(startDate);
+        console.log(1, dataCounter)
+        if(dataCounter){
+            if(dataCounter.length > 0 ?dataCounter[0]?.entrada: false){
+                console.log("paso")
+                setCounter(dataCounter.entrada)
+            }else{
+                console.log("Murio")
+            }
+        }   */
+    }, [/* startDate, store */]);
 
     //Pinta datos en el stepper
     function getStepContent(stepIndex) {
@@ -185,13 +212,13 @@ const TransferSystemPage = () => {
                                 <Typography variant="body2">No. personas</Typography>
                                 <NumericInput
                                     className="form-control"
-                                    value={dataSales[0].no_personas}
+                                    value={counter}
                                     step={1}
                                     precision={2}
                                     size={2}
                                     mobile
-
-                                    onChange={e => handleChangeData(e, "no_personas", "number")}
+                                    disabled={true}
+                                    //onChange={e => handleChangeData(e, "no_personas", "number")}
                                 />
                             </MDBCol>
                             <MDBCol md='2'>
